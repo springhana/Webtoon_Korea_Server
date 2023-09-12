@@ -67,7 +67,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.redirect("/");
+    res.json({ login: true });
   }
 );
 
