@@ -17,7 +17,7 @@ app.use(express.json());
 var cors = require("cors");
 app.use(
   cors({
-    origin: "https://springhana.github.io/Webtoon_Korea/", // 모든 출처 허용 옵션. true 를 써도 된다.
+    origin: "*", // 모든 출처 허용 옵션. true 를 써도 된다.
   })
 );
 
@@ -60,7 +60,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.redirect("/");
+    res.json({ login: true });
   }
 );
 
