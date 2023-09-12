@@ -37,8 +37,7 @@ module.exports = function (app) {
     "/api",
 
     proxy({
-      target:
-        "https://port-0-webtoon-korea-server-30yyr422almfl7fw9.sel5.cloudtype.app",
+      target: " https://springhana.github.io/Webtoon_Korea/",
 
       changeOrigin: true,
     })
@@ -75,7 +74,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.redirect("/");
+    res.redirect("/api/");
   }
 );
 
