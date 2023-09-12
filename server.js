@@ -30,6 +30,21 @@ const session = require("express-session");
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
 
+// 포록시
+const proxy = require("http-proxy-middleware");
+module.exports = function (app) {
+  app.use(
+    "/api",
+
+    proxy({
+      target:
+        "https://port-0-webtoon-korea-server-30yyr422almfl7fw9.sel5.cloudtype.app",
+
+      changeOrigin: true,
+    })
+  );
+};
+
 const MongoClient = require("mongodb").MongoClient;
 const url = process.env.DATABASE_URL;
 var db;
@@ -60,7 +75,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.json({ login: true, id: req.user._id });
+    res.redirect("/");
   }
 );
 
@@ -160,16 +175,17 @@ app.get("/logout", (req, res) => {
       // 로그아웃 후 리다이렉트 또는 응답 보내기
       console.log("로그아웃");
       res.clearCookie("connect.sid");
+      res.redirect("/");
       // 또는 res.json({ message: 'Logged out successfully' }); 를 통해 응답 보내기
     }
   });
 });
 
 // 마이페이지
-app.get("/myPage", Login, (req, res) => {
+app.get("/myPage/:_id", Login, (req, res) => {
   // db 마이페이지 추가
   db.collection("subscribe")
-    .findOne({ userId: req.query.userID })
+    .findOne({ userId: req.user._id })
     .then((result) => {
       console.log("마이페이지가 있네요");
       res.json({ login: true, name: req.user.name });
@@ -379,7 +395,7 @@ app.post("/write", upload.single("profile"), (req, res) => {
             }
           );
           console.log("글쓰기 성공 : " + result);
-          // res.redirect("/board/1");
+          res.redirect("/board/1");
         });
     });
 });
@@ -781,7 +797,6 @@ app.get("/comment/length", (req, res) => {
 // 내 글 가져오기
 app.use("/myBoard", (req, res) => {
   const page = parseInt(req.query.page) || 1;
-
   db.collection("board").countDocuments((error, result) => {
     const perPage = 15; // 한 페이지에 보여줄 게시판 수
     const currentPage = parseInt(req.params.page) || 1;
