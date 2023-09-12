@@ -23,9 +23,9 @@ app.use(
 
 app.use("/public/image", express.static(path.join(__dirname, "/public/image")));
 
+const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const session = require("express-session");
 
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
@@ -143,6 +143,7 @@ function Login(req, res, next) {
     res.json({ login: false });
   }
 }
+
 app.get("/loginCheck", (req, res) => {
   if (req.user && req.user._id) {
     db.collection("login")
