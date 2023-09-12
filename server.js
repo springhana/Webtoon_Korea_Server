@@ -60,7 +60,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.redirect("/");
+    res.redirect("/login");
   }
 );
 
@@ -804,12 +804,12 @@ app.use("/myBoard", (req, res) => {
       });
   });
 });
-app.use(express.static(path.join(__dirname, "webtoon/build")));
+// app.use(express.static(path.join(__dirname, "webtoon/build")));
 
-app.get("/", function (요청, 응답) {
-  응답.sendFile(path.join(__dirname, "/webtoon/build/index.html"));
-});
+// app.get("/", function (요청, 응답) {
+//   응답.sendFile(path.join(__dirname, "/webtoon/build/index.html"));
+// });
 
-app.get("*", function (요청, 응답) {
-  응답.sendFile(path.join(__dirname, "/webtoon/build/index.html"));
-});
+// app.get("*", function (요청, 응답) {
+//   응답.sendFile(path.join(__dirname, "/webtoon/build/index.html"));
+// });
