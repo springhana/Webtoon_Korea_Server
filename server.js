@@ -17,7 +17,8 @@ app.use(express.json());
 var cors = require("cors");
 app.use(
   cors({
-    origin: true, // 모든 출처 허용 옵션. true 를 써도 된다.
+    origin:
+      "https://port-0-webtoon-korea-server-30yyr422almfl7fw9.sel5.cloudtype.app/", // 모든 출처 허용 옵션. true 를 써도 된다.
   })
 );
 
