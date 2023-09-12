@@ -169,7 +169,7 @@ app.get("/logout", (req, res) => {
 app.get("/myPage", Login, (req, res) => {
   // db 마이페이지 추가
   db.collection("subscribe")
-    .findOne({ userId: ObjectId(req.query.userID).toString() })
+    .findOne({ userId: req.query.userID })
     .then((result) => {
       console.log("마이페이지가 있네요");
       res.json({ login: true, name: req.user.name });
