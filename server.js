@@ -52,7 +52,7 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie: {
-      secure: true, // 배포 환경에서는 true로 변경해야 할 수도 있음 (HTTPS 사용 시)
+      secure: false, // 배포 환경에서는 true로 변경해야 할 수도 있음 (HTTPS 사용 시)
     },
   })
 );
