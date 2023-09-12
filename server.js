@@ -24,6 +24,9 @@ app.use(
 app.use("/public/image", express.static(path.join(__dirname, "/public/image")));
 
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -46,20 +49,21 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function (에러, client)
 });
 
 // 로그인
+
 app.use(
   session({
-    secret: "secret-key",
+    secret: "my-secret-key",
     resave: true,
     saveUninitialized: false,
     cookie: {
-      secure: false, // 배포 환경에서는 true로 변경해야 할 수도 있음 (HTTPS 사용 시)
+      secure: true, // 배포 환경에서는 true로 변경 (HTTPS 사용 시)
+      maxAge: 1000 * 60 * 60 * 24, // 세션 만료 시간 (예: 24시간)
     },
   })
 );
-app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.initialize()); // passport 로그인 쉡게 도와줌
 
-// passport 로그인 쉡게 도와줌
 app.post(
   "/login",
   passport.authenticate("local", {
