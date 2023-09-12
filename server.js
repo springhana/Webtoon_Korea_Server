@@ -58,11 +58,13 @@ app.use(
     cookie: {
       secure: true, // 배포 환경에서는 true로 변경 (HTTPS 사용 시)
       maxAge: 1000 * 60 * 60 * 24, // 세션 만료 시간 (예: 24시간)
+      domain: ".github.io", // GitHub Pages 도메인 설정
+      path: "/", // 모든 경로에서 쿠키 사용
     },
   })
 );
-app.use(passport.session());
 app.use(passport.initialize()); // passport 로그인 쉡게 도와줌
+app.use(passport.session());
 
 app.post(
   "/login",
