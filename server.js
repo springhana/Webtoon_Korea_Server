@@ -30,20 +30,6 @@ const session = require("express-session");
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
 
-// 포록시
-const proxy = require("http-proxy-middleware");
-module.exports = function (app) {
-  app.use(
-    "/api",
-
-    proxy({
-      target: " https://springhana.github.io/Webtoon_Korea/",
-
-      changeOrigin: true,
-    })
-  );
-};
-
 const MongoClient = require("mongodb").MongoClient;
 const url = process.env.DATABASE_URL;
 var db;
@@ -61,7 +47,14 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function (에러, client)
 
 // 로그인
 app.use(
-  session({ secret: "secret-key", resave: true, saveUninitialized: false })
+  session({
+    secret: "secret-key",
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+      secure: true, // 배포 환경에서는 true로 변경해야 할 수도 있음 (HTTPS 사용 시)
+    },
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -74,7 +67,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.redirect("/api/");
+    res.redirect("/");
   }
 );
 
