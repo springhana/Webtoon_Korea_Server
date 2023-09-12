@@ -160,7 +160,6 @@ app.get("/logout", (req, res) => {
       // 로그아웃 후 리다이렉트 또는 응답 보내기
       console.log("로그아웃");
       res.clearCookie("connect.sid");
-      res.redirect("/");
       // 또는 res.json({ message: 'Logged out successfully' }); 를 통해 응답 보내기
     }
   });
@@ -170,7 +169,7 @@ app.get("/logout", (req, res) => {
 app.get("/myPage", Login, (req, res) => {
   // db 마이페이지 추가
   db.collection("subscribe")
-    .findOne({ userId: req.query.userID })
+    .findOne({ userId: ObjectId(req.query.userID) })
     .then((result) => {
       console.log("마이페이지가 있네요");
       res.json({ login: true, name: req.user.name });
@@ -380,7 +379,7 @@ app.post("/write", upload.single("profile"), (req, res) => {
             }
           );
           console.log("글쓰기 성공 : " + result);
-          res.redirect("/board/1");
+          // res.redirect("/board/1");
         });
     });
 });
