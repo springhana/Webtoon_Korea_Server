@@ -17,7 +17,7 @@ app.use(express.json());
 var cors = require("cors");
 app.use(
   cors({
-    origin: "*", // 모든 출처 허용 옵션. true 를 써도 된다.
+    origin: true, // 모든 출처 허용 옵션. true 를 써도 된다.
   })
 );
 
