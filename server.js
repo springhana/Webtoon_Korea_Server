@@ -60,7 +60,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.json({ login: true });
+    res.json({ login: true, id: req.user._id });
   }
 );
 
