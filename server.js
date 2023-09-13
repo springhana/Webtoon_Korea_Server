@@ -72,9 +72,6 @@ app.post(
   (req, res) => {
     console.log("로그인 성공");
     res.json({ login: true });
-    res.cookie("cookie", req.user.id, {
-      domain: "*", // 도메인 설정
-    });
   }
 );
 
