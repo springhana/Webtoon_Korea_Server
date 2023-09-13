@@ -56,9 +56,10 @@ app.get("/", (req, res) => {
 
 app.use(
   session({
-    secret: "my-secret-key",
-    resave: true,
-    saveUninitialized: false,
+    secret: "my-secret-key", // 세션 비밀 키
+    resave: false, // 세션 데이터가 변경되지 않더라도 세션을 항상 다시 저장 여부
+    saveUninitialized: false, // 초기화되지 않은 세션을 저장할지 여부
+    cookie: { maxAge: 3600000 }, // 1시간 유효한 세션
   })
 );
 app.use(passport.session());
