@@ -48,6 +48,10 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function (에러, client)
   });
 });
 
+app.get("/", (req, res) => {
+  res.send("성공");
+});
+
 // 로그인
 
 app.use(
@@ -55,16 +59,10 @@ app.use(
     secret: "my-secret-key",
     resave: true,
     saveUninitialized: false,
-    cookie: {
-      secure: true, // 배포 환경에서는 true로 변경 (HTTPS 사용 시)
-      maxAge: 1000 * 60 * 60 * 24, // 세션 만료 시간 (예: 24시간)
-      domain: ".github.io", // GitHub Pages 도메인 설정
-      path: "/", // 모든 경로에서 쿠키 사용
-    },
   })
 );
-app.use(passport.initialize()); // passport 로그인 쉡게 도와줌
 app.use(passport.session());
+app.use(passport.initialize()); // passport 로그인 쉡게 도와줌
 
 app.post(
   "/login",
@@ -74,6 +72,10 @@ app.post(
   (req, res) => {
     console.log("로그인 성공");
     res.json({ login: true });
+    res.cookie("my-cookie", "cookie-value", {
+      domain:
+        "https://port-0-webtoon-korea-server-30yyr422almfl7fw9.sel5.cloudtype.app/", // 도메인 설정
+    });
   }
 );
 
@@ -147,6 +149,7 @@ function Login(req, res, next) {
     next();
   } else {
     res.json({ login: false });
+    res.redirect("/");
   }
 }
 
@@ -181,7 +184,7 @@ app.get("/logout", (req, res) => {
 });
 
 // 마이페이지
-app.get("/myPage", Login, (req, res) => {
+app.get("/myPage/:_id", Login, (req, res) => {
   // db 마이페이지 추가
   db.collection("subscribe")
     .findOne({ userId: req.user._id })
