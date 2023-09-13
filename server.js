@@ -72,7 +72,7 @@ app.post(
   (req, res) => {
     console.log("로그인 성공");
     res.json({ login: true });
-    res.cookie("my-cookie", "cookie-value", {
+    res.cookie("cookie", req.user.id, {
       domain:
         "https://port-0-webtoon-korea-server-30yyr422almfl7fw9.sel5.cloudtype.app/", // 도메인 설정
     });
