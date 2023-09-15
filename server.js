@@ -795,28 +795,15 @@ app.get("/comment/length", (req, res) => {
 
 // 내 글 가져오기
 app.use("/myBoard", (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  db.collection("board").countDocuments((error, result) => {
-    const perPage = 15; // 한 페이지에 보여줄 게시판 수
-    const currentPage = parseInt(req.params.page) || 1;
-    const totalPosts = result;
-    const totalPages = Math.ceil(totalPosts / perPage);
-
-    if (currentPage > totalPages) {
-      // 요청한 페이지가 존재하지 않을 경우
-      return res.send("존재하지 않는 페이지입니다.");
-    }
-    db.collection("board")
-      .find({ userId: ObjectId(req.user._id) })
-      .skip((parseInt(page) - 1) * perPage)
-      .limit(perPage)
-      .toArray((error, result) => {
-        // console.log(result, totalPages, currentPage);
-        const board = { result, totalPages, currentPage };
-        res.json(board);
-      });
-  });
+  db.collection("board")
+    .find({ userId: ObjectId(req.user._id) })
+    .toArray()
+    .then((result) => {
+      const board = { result, totalPages, currentPage };
+      res.json(board);
+    });
 });
+
 // app.use(express.static(path.join(__dirname, "webtoon/build")));
 
 // app.get("/", function (요청, 응답) {
