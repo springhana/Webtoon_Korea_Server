@@ -799,8 +799,7 @@ app.use("/myBoard", (req, res) => {
     .find({ userId: ObjectId(req.user._id) })
     .toArray()
     .then((result) => {
-      const board = { result, totalPages, currentPage };
-      res.json(board);
+      res.json(result);
     });
 });
 
