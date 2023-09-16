@@ -377,7 +377,11 @@ app.post("/write", upload.single("profile"), (req, res) => {
         author: req.user.name,
         title: req.body.title,
         content: req.body.content,
-        image: req.file ? req.file.filename : "default.jpg",
+        image: req.file
+          ? parseInt(req.body.deleteImg) === 0
+            ? req.file.filename
+            : "default.jpg"
+          : "default.jpg",
         date: Today("time"),
       };
 
