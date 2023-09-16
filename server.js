@@ -316,7 +316,7 @@ let storage = multer.diskStorage({
 
         // PUT 요청에서만 postNumber를 추가
         if (req.method === "PUT") {
-          postNumber = req.body.totalPost;
+          postNumber = req.body.postNumber;
           postComment = req.body.totalComment;
         } else {
           postNumber = result.totalPost + 1;
