@@ -486,23 +486,27 @@ app.delete("/delete", (req, res) => {
 
 // 글 수정
 app.put("/edit", upload.single("profile"), (req, res) => {
-  let board = {
-    title: req.body.title,
-    content: req.body.content,
-    image: req.file ? req.file.filename : "default.jpg",
-    date: Today("time") + " / 수정",
-  };
-  db.collection("board").updateOne(
-    {
-      _id: ObjectId(req.body._id),
-      postNumber: parseInt(req.body.postNumber),
-    },
-    { $set: board },
-    (error, result) => {
-      console.log("수정 성공");
-      res.redirect("/board/1");
-    }
-  );
+  db.collection("board")
+    .findOne({ _id: ObjectId(req.body._id) })
+    .then((result) => {
+      let board = {
+        title: req.body.title,
+        content: req.body.content,
+        image: req.file ? req.file.filename : result.image,
+        date: Today("time") + " / 수정",
+      };
+      db.collection("board").updateOne(
+        {
+          _id: ObjectId(req.body._id),
+          postNumber: parseInt(req.body.postNumber),
+        },
+        { $set: board },
+        (error, result) => {
+          console.log("수정 성공");
+          res.redirect("/board/1");
+        }
+      );
+    });
 });
 
 // 게시판 댓글
