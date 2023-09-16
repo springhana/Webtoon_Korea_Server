@@ -492,7 +492,11 @@ app.put("/edit", upload.single("profile"), (req, res) => {
       let board = {
         title: req.body.title,
         content: req.body.content,
-        image: req.file ? req.file.filename : result.image,
+        image: req.file
+          ? req.file.filename
+          : req.body.deleteImg === 0
+          ? result.image
+          : "default.jpg",
         date: Today("time") + " / 수정",
       };
       db.collection("board").updateOne(
