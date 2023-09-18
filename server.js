@@ -72,7 +72,7 @@ app.post(
   }),
   (req, res) => {
     console.log("로그인 성공");
-    res.json({ login: true });
+    res.json({ login: true, _id: req.user._id });
   }
 );
 
@@ -157,7 +157,6 @@ app.get("/loginCheck", (req, res) => {
       .then((result) => {
         if (result) {
           const user = { login: true, _id: req.user._id };
-          // res.status(200).send({ message: "성공했습니다. " });
           res.json(user);
         }
       });
@@ -171,11 +170,9 @@ app.get("/logout", (req, res) => {
       console.error("Error destroying session", err);
       res.status(500).json({ error: "Server error" });
     } else {
-      // 로그아웃 후 리다이렉트 또는 응답 보내기
       console.log("로그아웃");
       res.clearCookie("connect.sid");
       res.redirect("/");
-      // 또는 res.json({ message: 'Logged out successfully' }); 를 통해 응답 보내기
     }
   });
 });
@@ -323,15 +320,16 @@ let storage = multer.diskStorage({
           postComment = result.totalComment + 1;
         }
 
+        console.log(req.url);
         // url에 변경
         if (req.url === "/write") {
           url = "board";
-        } else if (req.url === "/edit?_method=PUT") {
+        } else if (req.url === "/edit") {
           url = "board";
         } else if (req.url === "/commentPost") {
           postNumber = req.body.postNumber + "-" + postComment;
           url = "comment";
-        } else if (req.url === "/editComment?_method=PUT") {
+        } else if (req.url === "/editComment") {
           postNumber = req.body.postNumber + "-" + postComment;
           url = "comment";
         }
@@ -398,7 +396,7 @@ app.post("/write", upload.single("profile"), (req, res) => {
             }
           );
           console.log("글쓰기 성공 : " + result);
-          res.redirect("/board/1");
+          res.json({ write: true });
         });
     });
 });
@@ -511,7 +509,7 @@ app.put("/edit", upload.single("profile"), (req, res) => {
         { $set: board },
         (error, result) => {
           console.log("수정 성공");
-          res.redirect("/board/1");
+          res.json({ update: true });
         }
       );
     });
@@ -528,7 +526,11 @@ app.post("/commentPost", upload.single("profile"), (req, res) => {
         postNumber: parseInt(req.body.postNumber),
         author: req.user.name,
         comment: req.body.comment,
-        image: req.file ? req.file.filename : "default.jpg",
+        image: req.file
+          ? parseInt(req.body.deleteImg) === 0
+            ? req.file.filename
+            : "default.jpg"
+          : "default.jpg",
         date: Today("time"),
         totalComment: result.totalComment + 1,
         likedIds: [],
@@ -546,7 +548,7 @@ app.post("/commentPost", upload.single("profile"), (req, res) => {
             }
           );
           console.log("글쓰기 성공 : " + result);
-          res.redirect("/board/1");
+          res.json({ write: true });
         });
     });
 });
@@ -606,7 +608,7 @@ app.put("/editComment", upload.single("profile"), (req, res) => {
     { $set: comment },
     (error, result) => {
       console.log("댓글 수정 성공");
-      res.redirect("/board/1");
+      res.json({ update: true });
     }
   );
 });
@@ -721,7 +723,8 @@ app.put("/webtoon/update", (req, res) => {
     { $set: comment },
     (error, result) => {
       console.log("댓글 수정 성공");
-      res.redirect("/board/1");
+      console.log(comment, req.body._id);
+      res.json({ update: true });
     }
   );
 });
