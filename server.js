@@ -149,6 +149,7 @@ let storage = multer.diskStorage({
   },
 });
 var upload = multer({ storage: storage });
+
 // 로그인
 
 app.use(
@@ -926,15 +927,24 @@ app.post("/chatroom", (req, res) => {
     .then((result) => {
       const save = {
         title: [result.name, req.user.name],
-        member: [ObjectId(req.body.chatuserId), req.user._id],
+        member: [ObjectId(req.body.chatuserId), req.user._id].sort(),
         date: new Date(),
       };
-
       db.collection("chatroom")
-        .insertOne(save)
+        .findOne({
+          member: [ObjectId(req.body.chatuserId), req.user._id].sort(),
+        })
         .then((result) => {
-          console.log("채팅방 생성");
-          res.json({ chatroom: true });
+          if (!result) {
+            db.collection("chatroom")
+              .insertOne(save)
+              .then((result) => {
+                console.log("채팅방 생성");
+                res.json({ chatroom: true });
+              });
+          } else {
+            console.log("이미 채팅창이 있어요");
+          }
         });
     });
 });
