@@ -35,6 +35,9 @@ $ nodemon
 
 ## 기술 스택
 
+
+<p><strong><a href="https://github.com/HyeokjaeLee/korea-webtoon-api">사용한 웹툰 오픈 API</a></strong></p>
+    
 <div style="display:flex; flex-direction:column; align-items:flex-start;"> 
   <div>
     <p><strong>BackEnd</strong></p>
